@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 
 var router = require('./routes');
-var dbConfig = require('./config/db');
+var dbConfig = require('./config/db') || {url: process.env.DB_URL };
 
 var app = express();
 
