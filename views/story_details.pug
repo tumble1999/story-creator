@@ -10,9 +10,8 @@ block content
   if story.completed
     p= story.fullStory
   else
-    p Words to next sentence: #{story.currentWord} / #{min.word}
+    p Words to next sentence: #{story.currentWord} / #{min.words}
     p Sentences to end story: #{story.currentSentence} / #{min.sentences}
-    br
     br
     form(method="post")
       | #{story.preview}
