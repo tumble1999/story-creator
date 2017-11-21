@@ -5,8 +5,8 @@ const Story = require('../models/story');
 const storyID = require('../config/story_id');
 
 const min = {
-  words: 4,
-  sentences: 4
+  words: 20,
+  sentences: 100
 }
 
 exports.story_create_get = function (req, res) {
@@ -75,7 +75,8 @@ exports.story_detail_get = function (req, res) {
 
 exports.story_detail_post = function (req, res) {
 
-  var word = req.body.word.split(" ")[0];
+  var words = req.body.word.split(' ');
+  var wordCount = words.length;
   var action = req.body.action;
   var id = req.params.id;
   Story
@@ -99,8 +100,10 @@ exports.story_detail_post = function (req, res) {
         if (newdata.text[newdata.currentSentence]===undefined) {
           newdata.text[newdata.currentSentence] = [];
         }
-        newdata.text[newdata.currentSentence][newdata.currentWord]=word;
-        newdata.currentWord++;
+        for (word of words) {
+          newdata.text[newdata.currentSentence][newdata.currentWord]=word;
+          newdata.currentWord++;
+        }
         break;
       case "New Sentence":
     newdata.currentSentence++;
