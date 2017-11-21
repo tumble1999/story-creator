@@ -75,7 +75,7 @@ exports.story_detail_get = function (req, res) {
 
 exports.story_detail_post = function (req, res) {
 
-  var words = req.body.word.split(' ');
+  var words = req.body.word.split('.').join('').split(' ');
   var wordCount = words.length;
   var action = req.body.action;
   var id = req.params.id;
@@ -111,6 +111,8 @@ exports.story_detail_post = function (req, res) {
         break;
       case "Complete Story":
       newdata.completed=true;
+    newdata.currentSentence++;
+    newdata.currentWord=0;
         break;
       default:
       errorError = "No action specified.";

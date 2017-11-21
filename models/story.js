@@ -53,13 +53,14 @@ StorySchema
 .get(function () {
   var story = [];
   var min = this.currentSentence-2;
+  var max = this.currentSentence+1;
 
   if (min<0) {
     min=0;
   }
 
 
-  for (var i = min; i < this.currentSentence; i++) {
+  for (var i = min; i < max; i++) {
     story[i] = this.text[i].join(" ");
     if (i<this.currentSentence) {
       story[i]+=".";
