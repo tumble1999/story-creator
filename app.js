@@ -12,7 +12,7 @@ var dbURL = process.env.DB_URL || require('./config/db').url ;
 var app = express();
 
 // Database setup
-mongoose.connect(dbURl, {
+mongoose.connect(dbURL, {
   useMongoClient: true
 });
 var db = mongoose.connection;
