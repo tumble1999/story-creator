@@ -39,7 +39,7 @@ StorySchema
 .get(function () {
   var story = [];
 
-  for (var i = 0; i < this.text.length; i++) {
+  for (var i = 0; i < this.currentSentence; i++) {
     story[i] = this.text[i].join(" ");
     if (i<this.currentSentence) {
       story[i]+=".";
@@ -52,14 +52,14 @@ StorySchema
 .virtual('preview')
 .get(function () {
   var story = [];
-  var min = this.text.length-2;
+  var min = this.currentSentence-2;
 
   if (min<0) {
     min=0;
   }
 
 
-  for (var i = min; i < this.text.length; i++) {
+  for (var i = min; i < this.currentSentence; i++) {
     story[i] = this.text[i].join(" ");
     if (i<this.currentSentence) {
       story[i]+=".";
