@@ -16,10 +16,10 @@ block content
       input(type="submit", name="action", value="Add Word")
       
       if story.text[story.currentSentence]
-        if story.text[story.currentSentence].length >= min.words
+        if story.currentWord >= min.words
           br
           br
           input(type="submit", name="action", value="New Sentence")
-          if story.text.length >= min.sentences
+          if story.currentSentence >= min.sentences
             br
             input(type="submit", name="action", value="Complete Story")
