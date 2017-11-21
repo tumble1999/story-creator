@@ -7,12 +7,12 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 
 var router = require('./routes');
-var dbConfig = require('./config/db') || {url: process.env.DB_URL };
+var dbURL = process.env.DB_URL || require('./config/db').url ;
 
 var app = express();
 
 // Database setup
-mongoose.connect(dbConfig.url, {
+mongoose.connect(dbURl, {
   useMongoClient: true
 });
 var db = mongoose.connection;
