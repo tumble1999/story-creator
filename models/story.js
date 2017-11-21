@@ -39,7 +39,7 @@ StorySchema
 .get(function () {
   var story = [];
 
-  for (var i = 0; i < this.currentSentence; i++) {
+  for (var i = 0; i < this.text.length; i++) {
     story[i] = this.text[i].join(" ");
     if (i<this.currentSentence) {
       story[i]+=".";

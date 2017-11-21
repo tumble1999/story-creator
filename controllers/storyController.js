@@ -111,7 +111,7 @@ exports.story_detail_post = function (req, res) {
         break;
       case "Complete Story":
       newdata.completed=true;
-    newdata.currentSentence++;
+    newdata.currentSentence=0;
     newdata.currentWord=0;
         break;
       default:
