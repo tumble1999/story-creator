@@ -104,6 +104,7 @@ exports.story_detail_post = function (req, res) {
         break;
       case "New Sentence":
     newdata.currentSentence++;
+    newdata.currentWord=0;
         break;
       case "Complete Story":
       newdata.completed=true;
