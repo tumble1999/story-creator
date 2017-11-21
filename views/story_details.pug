@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  p
+    a(href="/stories") <--back
+  h1= story.title
+  if error
+    p Error: #{error}
+  
+  if story.completed
+    p= story.fullStory
+  else
+    form(method="post")
+      | #{story.preview}
+      input(type="text", name="word")
+      input(type="submit", name="action", value="Add Word")
+      
+      if story.text[story.currentSentence]
+        if story.text[story.currentSentence].length >= min.words
+          br
+          br
+          input(type="submit", name="action", value="New Sentence")
+          if story.text.length >= min.sentences
+            br
+            input(type="submit", name="action", value="Complete Story")

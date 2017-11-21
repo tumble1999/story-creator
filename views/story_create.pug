@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1= title
+  
+  form(method="post")
+    | Title:
+    input(type="text", name="title")
+    input(type="submit", value="create")
+  if error
+    ul
+      li= error

@@ -1,0 +1,21 @@
+extends layout
+
+block content
+  div
+    h1= title
+    p Making stories, one word at a time.
+    
+    a(href="stories/create") Create Story
+  if error
+    p Error: #{error}
+  
+  div(class="story_list")
+    for story in stories
+      div(class="story_item")
+        h2
+          a(href=story.url)= story.title
+        if !story.completed
+          strong(style="color: red;") Incompleate
+        p= story.fullStory
+    else
+      p There are no stories.
