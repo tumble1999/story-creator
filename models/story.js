@@ -61,12 +61,14 @@ StorySchema
 
   if (this.text[0]) {
     for (var i = min; i < max; i++) {
-      story[i] = this.text[i].join(" ");
-      if (i<this.currentSentence) {
-        story[i]+=".";
+      if (this.text[i]) {
+        story[i] = this.text[i].join(" ");
+        if (i<this.currentSentence) {
+          story[i]+=".";
+        }
       }
     }
-    return story.join(" ");
+    return story.join(" ") + " ";
   }
   else {
     return "";
