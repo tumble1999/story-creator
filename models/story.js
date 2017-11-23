@@ -63,12 +63,14 @@ StorySchema
   if (this.text[this.currentSentence]) {
     for (var i = min; i < max; i++) {
       if (this.text[this.currentSentence][i]) {
-        story += this.text[this.currentSentence][i]//.join(" ");
+        story += " " + this.text[this.currentSentence][i]//.join(" ");
         // if (i<this.currentSentence) {
         //   story[i]+=".";
         // }
       }
     }
+
+    story = story.trim();
 
     if (story.split(" ").length<wordCount) {
       if (this.currentSentence>0) {
@@ -76,9 +78,10 @@ StorySchema
         var prev = "";
         for (var i = wordCount - story.split(" ").length; i < this.text[this.currentSentence-1].length; i++) {
           if (this.text[this.currentSentence-1][i]) {
-            prev += this.text[this.currentSentence-1][i];
+            prev += " " + this.text[this.currentSentence-1][i];
           }
         }
+        prev = prev.trim();
         story = prev + ". " + story;
       }
     }
