@@ -51,24 +51,37 @@ StorySchema
 StorySchema
 .virtual('preview')
 .get(function () {
-  var story = [];
-  var min = this.currentSentence-2;
-  var max = this.currentSentence+1;
+  var story = "";
+  var wordCount = 5;
+  var min = this.currentWord-wordCount;
+  var max = this.currentWord;
 
   if (min<0) {
     min=0;
   }
 
-  if (this.text[0]) {
+  if (this.text[this.currentSentence]) {
     for (var i = min; i < max; i++) {
-      if (this.text[i]) {
-        story[i] = this.text[i].join(" ");
-        if (i<this.currentSentence) {
-          story[i]+=".";
-        }
+      if (this.text[this.currentSentence][i]) {
+        story += this.text[this.currentSentence][i]//.join(" ");
+        // if (i<this.currentSentence) {
+        //   story[i]+=".";
+        // }
       }
     }
-    return story.join(" ") + " ";
+
+    if (story.split(" ").length<wordCount) {
+      if (currentSentence>0) {
+        var prev = "";
+        for (var i = wordCount - story.split(" ").length; i < this.text[this.currentSentence-1].length; i++) {
+          if (this.text[this.currentSentence-1][i]) {
+            prev += this.text[this.currentSentence-1][i];
+          }
+        }
+        story = prev + ". " + story;
+      }
+    }
+    return story/*.join(" ")*/ + " ";
   }
   else {
     return "";
