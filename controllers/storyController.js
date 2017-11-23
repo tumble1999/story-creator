@@ -16,7 +16,8 @@ exports.story_create_get = function (req, res) {
 };
 
 exports.story_create_post = function (req, res) {
-  var title = req.body.title.split(' ').join('');
+  var title = req.body.title.split(' ').join('') || "";
+
   Story
   .find({title: title})
   .exec(function (err, results) {
@@ -25,6 +26,7 @@ exports.story_create_post = function (req, res) {
         title: "Create Story",
         error: err
       });
+      return;
     }
     if (results[0]) {
 
@@ -37,10 +39,17 @@ exports.story_create_post = function (req, res) {
         if (err) {
           res.render('story_create', {
             title: "Create Story",
-            error:err
+            error: err
           });
+          return;
         }
         //CREATED
+
+        module.exports.story_list_update_req(function (error, results) {
+          console.log('[Socket.io]: Sending Stories....');
+          res.io.emit('story_list_update_res', error, module.exports.story_html_array(results));
+        });
+
         res.redirect(newStory.url);
       });
     }
@@ -48,6 +57,7 @@ exports.story_create_post = function (req, res) {
 };
 
 exports.story_list_get = function (req, res) {
+
   Story
   .find({})
   .sort({complete: 1})
@@ -75,7 +85,7 @@ exports.story_detail_get = function (req, res) {
 
 exports.story_detail_post = function (req, res) {
 
-  var words = req.body.word.split('.').join('').split(' ');
+  var words = req.body.word.split('.').join('').split(' ') || [""];
   var wordCount = words.length;
   var action = req.body.action;
   var id = req.params.id;
@@ -89,6 +99,7 @@ exports.story_detail_post = function (req, res) {
         error: error,
         min: min
       });
+      return;
     }
     var newdata = results;
     var errorError;
@@ -120,6 +131,7 @@ exports.story_detail_post = function (req, res) {
     results.update(newdata, function (error) {
       if(error){
         errorError = error;
+        return;
       }
     });
 
@@ -130,4 +142,41 @@ exports.story_detail_post = function (req, res) {
       min: min
     });
   })
+};
+
+exports.story_list_update_req = function (callback) {
+
+  async.parallel({
+      stories: function (cb) {
+        Story
+        .find({})
+        .sort({complete: 1})
+        .exec(function (error, results) {
+          cb(error, results);
+        });
+      }
+    },
+    function(error, results) {
+      var res = results.stories;
+      callback(error, res);
+    }
+  );
+};
+
+exports.story_html_array = function (stories) {
+  var output = [""];
+  for (var i = 0; i < stories.length; i++) {
+    var story = stories[i];
+    var completedLine = !story.completed?'<strong style="color: red;">Incomplete</strong>':''
+    output[i] = '<div class="story_item">' +
+                  '<h2><a href="' + story.url + '">' +
+                    story.title +
+                    '</a>' +
+                  '</h2>' +
+                  completedLine +
+                  '<p>' +
+                  story.fullStory +
+                  '</p></div>'
+  }
+  return output;
 };

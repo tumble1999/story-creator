@@ -11,6 +11,11 @@ var dbURL = process.env.DB_URL || require('./config/db').url ;
 
 var app = express();
 
+//SOCKET.JS
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+//---------
+
 // Database setup
 mongoose.connect(dbURL, {
   useMongoClient: true
@@ -24,6 +29,14 @@ app.set('view engine', 'pug');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
+//add socket.io to event loop
+app.use(function(req, res, next){
+  res.io = io;
+
+  next();
+});
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -49,4 +62,5 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+//module.exports = app;
+module.exports = {app: app, server: server}; //SOCKET.IO
