@@ -71,7 +71,8 @@ StorySchema
     }
 
     if (story.split(" ").length<wordCount) {
-      if (currentSentence>0) {
+      if (this.currentSentence>0) {
+
         var prev = "";
         for (var i = wordCount - story.split(" ").length; i < this.text[this.currentSentence-1].length; i++) {
           if (this.text[this.currentSentence-1][i]) {
