@@ -26,6 +26,16 @@ var StorySchema = new Schema({
     type: [[String]]
   }
 
+}, {
+  url: {
+  virtuals: true
+  },
+  fullStory: {
+  virtuals: true
+  },
+  preview: {
+  virtuals: true
+  }
 });
 
 StorySchema

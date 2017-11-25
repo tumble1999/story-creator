@@ -9,12 +9,14 @@ const min = {
   sentences: 100
 }
 
+// Displys the create story form
 exports.story_create_get = function (req, res) {
   res.render('story_create', {
     title: "Create Story"
   });
 };
 
+//Creates a story when the form is submitted
 exports.story_create_post = function (req, res) {
   var title = req.body.title.split(' ').join('') || "";
 
@@ -43,11 +45,11 @@ exports.story_create_post = function (req, res) {
           });
           return;
         }
-        //CREATED
 
-        module.exports.story_list_update_req(function (error, results) {
+        //CREATED
+        module.exports.story_array_req(function (error, results) {
           console.log('[Socket.io]: Sending Stories....');
-          res.io.emit('story_list_update_res', error, module.exports.story_html_array(results));
+          res.io.emit('story_list_update_res', error, module.exports.story_html_sentence_array(results));
         });
 
         res.redirect(newStory.url);
@@ -56,6 +58,7 @@ exports.story_create_post = function (req, res) {
   });
 };
 
+//Displays the list of stories for the home page
 exports.story_list_get = function (req, res) {
 
   Story
@@ -70,6 +73,7 @@ exports.story_list_get = function (req, res) {
   });
 };
 
+//Displays the story detail page where you can add a word
 exports.story_detail_get = function (req, res) {
   Story
   .findOne({[storyID.attribute]:req.params.id})
@@ -77,12 +81,14 @@ exports.story_detail_get = function (req, res) {
     res.render('story_details', {
       title: results.title + " - Story",
       story: results,
+      id: req.params.id,
       error: error,
       min: min
     });
   });
 };
 
+//addes a word to the story when one is submittd
 exports.story_detail_post = function (req, res) {
 
   var words = req.body.word.split('.').join('').split(' ') || [""];
@@ -133,6 +139,12 @@ exports.story_detail_post = function (req, res) {
         errorError = error;
         return;
       }
+      console.log('[Socket.io]: Sending New Preview....');
+      res.io.emit('story_preview_update_res', newdata[storyID.attribute], undefined, newdata.preview);
+      module.exports.story_array_req(function (error, results) {
+        console.log('[Socket.io]: Sending Stories....');
+        res.io.emit('story_list_update_res', error, module.exports.story_html_sentence_array(results));
+      });
     });
 
     res.render('story_details', {
@@ -144,7 +156,22 @@ exports.story_detail_post = function (req, res) {
   })
 };
 
-exports.story_list_update_req = function (callback) {
+//Displays the story detail page where you can add a word
+exports.story_detail_twitch_get = function (req, res) {
+  Story
+  .findOne({[storyID.attribute]:req.params.id})
+  .exec(function (error, results) {
+    res.render('story_details_twitch', {
+      title: results.title + " - Story",
+      story: results,
+      id: req.params.id,
+      error: error,
+      min: min
+    });
+  });
+};
+
+exports.story_array_req = function (callback) {
 
   async.parallel({
       stories: function (cb) {
@@ -163,7 +190,27 @@ exports.story_list_update_req = function (callback) {
   );
 };
 
-exports.story_html_array = function (stories) {
+exports.story_preview_req = function (id, callback) {
+  async.parallel({
+    story: function (cb) {
+      Story
+      .findOne({[storyID.attribute]:id})
+      .exec(function (error, results) {
+        //console.log("search: " + results);
+        //console.log(results.preview);
+        cb(error, results);
+      });
+    }
+  },
+  function(error, results) {
+    //console.log("results: " + JSON.stringify(results));
+    var res = results.story.preview;
+    callback(error, res);
+  }
+  );
+};
+
+exports.story_html_sentence_array = function (stories) {
   var output = [""];
   for (var i = 0; i < stories.length; i++) {
     var story = stories[i];

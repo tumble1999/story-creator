@@ -14,17 +14,20 @@ block content
   else
     p Words to next sentence: #{story.currentWord} / #{min.words}
     p Sentences to end story: #{story.currentSentence} / #{min.sentences}
-    br
-    form(method="post")
+    div(class="current_story")
+      h3 Current Story
       span(class="story_preview") #{story.preview}
-      input(type="text", name="word", autofocus)
-      input(type="submit", name="action", value="Add Word")
-      
+    
+    div(class="command_list")
+    h3 Available commands:
+    ul
+      li
+        p word [word] - add a word
+        
+        
       if story.text[story.currentSentence]
         if story.currentWord >= min.words
           br
           br
-          input(type="submit", name="action", value="New Sentence")
-          if story.currentSentence >= min.sentences
-            br
-            input(type="submit", name="action", value="Complete Story")
+          li
+            p sentence  - new sentence
