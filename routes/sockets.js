@@ -18,10 +18,10 @@ router.use(function (req, res, next) {
 
     socket.on('story_preview_update_req', function (id) {
       console.log('[Socket.io]: Story preview requested by client ' + socket.id + '.');
-      console.log('id: ' + id);
+      //console.log('id: ' + id);
       StoryController.story_preview_req(id, function (error, results) {
         console.log('[Socket.io]: Sending Story text preview to client ' + socket.id + '...');
-        console.log('results: ' + results);
+        //console.log('results: ' + results);
         socket.emit('story_preview_update_res', id, error, results.preview, results.currentWord, results.currentSentence, results.completed);
       });
     });

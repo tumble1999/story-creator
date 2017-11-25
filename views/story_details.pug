@@ -25,11 +25,11 @@ block content
         p(class="error") Error: #{error}
       br
       br
-        if story.text[story.currentSentence]
-         if story.currentWord >= min.words
+      if story.text[story.currentSentence]
+       if story.currentWord >= min.words
+         br
+         br
+         input(type="submit", name="action", value="New Sentence")
+         if story.currentSentence >= min.sentences
            br
-           br
-           input(type="submit", name="action", value="New Sentence")
-           if story.currentSentence >= min.sentences
-             br
-             input(type="submit", name="action", value="Complete Story")
+           input(type="submit", name="action", value="Complete Story")
