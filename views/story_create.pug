@@ -3,12 +3,12 @@ extends layout
 block content
   p
     a(href="/stories") <--back
-  h1= title
+  h1(class="page_title")= title
   
   form(method="post")
     | Title:
     input(type="text", name="title")
     input(type="submit", value="create")
-  if error
-    ul
-      li= error
+    
+    if error
+      p(class="error") Error: #{error}

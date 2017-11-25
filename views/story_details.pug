@@ -5,26 +5,32 @@ block content
   
   p
     a(href="/stories") <--back
-  h1= story.title
-  if error
-    p Error: #{error}
+  h1(class="page_title")= story.title
   
   if story.completed
     p= story.fullStory
   else
-    p Words to next sentence: #{story.currentWord} / #{min.words}
-    p Sentences to end story: #{story.currentSentence} / #{min.sentences}
+    p Words to next sentence: 
+      span(class="current_Word") #{story.currentWord}
+      | / #{min.words}
+    p Sentences to end story: 
+      span(class="current_sentence") #{story.currentSentence}
+      | / #{min.sentences}
     br
     form(method="post")
       span(class="story_preview") #{story.preview}
       input(type="text", name="word", autofocus)
       input(type="submit", name="action", value="Add Word")
-      
-      if story.text[story.currentSentence]
-        if story.currentWord >= min.words
-          br
-          br
           input(type="submit", name="action", value="New Sentence")
-          if story.currentSentence >= min.sentences
-            br
-            input(type="submit", name="action", value="Complete Story")
+      if error
+        p(class="error") Error: #{error}
+      br
+      br
+        if story.text[story.currentSentence]
+         if story.currentWord >= min.words
+           br
+           br
+           input(type="submit", name="action", value="New Sentence")
+           if story.currentSentence >= min.sentences
+             br
+             input(type="submit", name="action", value="Complete Story")

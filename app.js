@@ -33,7 +33,6 @@ app.set('view engine', 'pug');
 //add socket.io to event loop
 app.use(function(req, res, next){
   res.io = io;
-
   next();
 });
 
@@ -61,6 +60,8 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
 
 //module.exports = app;
 module.exports = {app: app, server: server}; //SOCKET.IO

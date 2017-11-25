@@ -90,14 +90,17 @@ exports.story_detail_get = function (req, res) {
 
 //addes a word to the story when one is submittd
 exports.story_detail_post = function (req, res) {
-
   var words = req.body.word.split('.').join('').split(' ') || [""];
   var wordCount = words.length;
   var action = req.body.action;
   var id = req.params.id;
+
   Story
   .findOne({[storyID.attribute]:id})
   .exec(function (error, results) {
+    if(words[0] === "" | words[0] === undefined | words.length === 0 | words === "" | words === undefined) {
+      error = "Nothing was entered."
+    }
     if(error) {
       res.render('story_details', {
         title: results.title + " - Story",
@@ -123,16 +126,16 @@ exports.story_detail_post = function (req, res) {
         }
         break;
       case "New Sentence":
-    newdata.currentSentence++;
-    newdata.currentWord=0;
+        newdata.currentSentence++;
+        newdata.currentWord=0;
         break;
       case "Complete Story":
-      newdata.completed=true;
-    newdata.currentSentence=0;
-    newdata.currentWord=0;
+        newdata.completed=true;
+        newdata.currentSentence=0;
+        newdata.currentWord=0;
         break;
       default:
-      errorError = "No action specified.";
+        errorError = "No action specified.";
     }
     results.update(newdata, function (error) {
       if(error){
@@ -140,11 +143,24 @@ exports.story_detail_post = function (req, res) {
         return;
       }
       console.log('[Socket.io]: Sending New Preview....');
-      res.io.emit('story_preview_update_res', newdata[storyID.attribute], undefined, newdata.preview);
-      module.exports.story_array_req(function (error, results) {
-        console.log('[Socket.io]: Sending Stories....');
-        res.io.emit('story_list_update_res', error, module.exports.story_html_sentence_array(results));
-      });
+      switch (action) {
+        case "Add Word":
+          res.io.emit('story_preview_update_res', newdata[storyID.attribute], undefined, newdata.preview, newdata.currentWord, newdata.currentSentence, newdata.completed);
+        case "New Sentence":
+          res.io.emit('refresh');
+          break;
+        case "Complete Story":
+            res.io.emit('refresh');
+          break;
+        default:
+        break;
+      }
+
+      if (newData.currentWord>=min.words) {
+        res.io.emit('refresh');
+      } else if (newData.currentSentence>=min.sentences) {
+        res.io.emit('refresh');
+      }
     });
 
     res.render('story_details', {
@@ -158,17 +174,20 @@ exports.story_detail_post = function (req, res) {
 
 //Displays the story detail page where you can add a word
 exports.story_detail_twitch_get = function (req, res) {
+
   Story
   .findOne({[storyID.attribute]:req.params.id})
   .exec(function (error, results) {
+
     res.render('story_details_twitch', {
-      title: results.title + " - Story",
+      title: results.title||"No Story" + " - Story",
       story: results,
       id: req.params.id,
       error: error,
       min: min
     });
   });
+
 };
 
 exports.story_array_req = function (callback) {
@@ -196,15 +215,14 @@ exports.story_preview_req = function (id, callback) {
       Story
       .findOne({[storyID.attribute]:id})
       .exec(function (error, results) {
-        //console.log("search: " + results);
-        //console.log(results.preview);
         cb(error, results);
       });
     }
   },
   function(error, results) {
     //console.log("results: " + JSON.stringify(results));
-    var res = results.story.preview;
+    var res = results.story;
+    res.preview = results.story.preview;
     callback(error, res);
   }
   );

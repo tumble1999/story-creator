@@ -2,12 +2,14 @@ extends layout
 
 block content
   div
-    h1= title
+    h1(class="page_title")= title
+    
+    span
+      a(href="stories/create")   Create Story
     p Making stories, one word at a time.
     
-    a(href="stories/create") Create Story
   if error
-    p Error: #{error}
+    p(class="error") Error: #{error}
   
   div(class="story_list")
     for story in stories

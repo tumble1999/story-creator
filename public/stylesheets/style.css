@@ -6,3 +6,26 @@ body {
 a {
   color: #00B7FF;
 }
+
+
+.page_title {
+  display: inline;
+}
+@keyframes fadeOutErrorBorder {
+  0% {
+    border: 3px solid #ff0000;
+  }
+  100% {
+    border: 3px solid #ffffff;
+  }
+}
+
+.error {
+  border: 3px
+  color: red;
+  width: auto;
+  height: auto;
+
+
+  animation: 1s ease-out 0s 1 fadeOutErrorBorder;
+}
